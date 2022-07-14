@@ -1,26 +1,34 @@
 <template>
-  {{ store.info }}
-  {{ store.character.length }}
-  <div class="grid">
-    <div class="column" v-for="character in store.$state.character" :key="character.id">
-      <img :src="character.image" alt="" />
-      {{ character.name }}
+  <div>
+    {{ store.infoList }}
+    {{ store.charactersList.length }}
+    <modal v-show="store.singleCharacter" :data="store.singleCharacter"  @close-modal="clearSingleCharacter" />
+    <div class="grid">
+      <div
+        class="column"
+        v-for="character in store.charactersList"
+        :key="character.id"
+      >
+        <card :character="character" @open-current="singleCharacter"/>
+      </div>
     </div>
+    <button @click="nextCharacter(store.info.next)">load more</button>
   </div>
-  <button @click="nextCharacter(store.info.next)">load more</button>
 </template>
 
 <script>
 import { useCoreStore } from "~/store/core";
 
+import ModalVue from "~/components/Modal.vue";
+import CardVue from "~/components/Card.vue";
 export default {
   setup() {
     const store = useCoreStore();
     return {
-      // you can return the whole store instance to use it in the template
       store,
     };
   },
+  components: [ModalVue, CardVue],
   created() {
     this.getCharacter();
   },
@@ -31,22 +39,29 @@ export default {
     async nextCharacter(next) {
       if (next) await this.store.nextCharacter(next);
     },
+    async singleCharacter(next) {
+      if (next) await this.store.fetchSingleCharacter(next);
+      console.log(this.store.singleCharacter)
+    },
+    async clearSingleCharacter() {
+      this.store.clearSingleCharacter()
+    },
   },
 };
 </script>
 
 <style lang="scss" scoped>
-body{
-    margin: 0;
-    padding: 0;
+body {
+  margin: 0;
+  padding: 0;
 }
-.grid{
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr;
-    column-gap: 10px;
-    row-gap: 10px;
-    img{
-        max-width: 100%;
-    }
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  column-gap: 10px;
+  row-gap: 10px;
+  img {
+    max-width: 100%;
+  }
 }
 </style>
