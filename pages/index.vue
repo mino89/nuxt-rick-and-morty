@@ -9,11 +9,15 @@
         v-for="character in store.charactersList"
         :key="character.id"
       >
-        <card
-          :character="character"
-          @open-current="singleCharacter"
-          :selected="store.singleCharacter?.id === character.id ? true : false"
-        />
+       
+          <card
+            :character="character"
+            @open-current="singleCharacter"
+            :selected="
+              store.singleCharacter?.id === character.id ? true : false
+            "
+          />
+ 
       </div>
     </div>
     <button @click="nextCharacter(store.info.next)">load more</button>
@@ -68,4 +72,6 @@ body {
     max-width: 100%;
   }
 }
+
+
 </style>

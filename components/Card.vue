@@ -1,11 +1,13 @@
 <template>
-  <article class="card" @click="openCurrent">
-    <figure>
-      <img :src="character.image" :alt="character.name" />
-    </figure>
+  <Transition appear>
+    <article class="card" @click="openCurrent">
+      <figure>
+        <img :src="character.image" :alt="character.name" />
+      </figure>
 
-    {{ character.name }}
-  </article>
+      {{ character.name }}
+    </article>
+  </Transition>
 </template>
 
 <script>
@@ -31,9 +33,18 @@ export default {
 
   img {
     max-width: 100%;
-    position: relative
+    position: relative;
   }
 }
 
+.v-enter-active,
+.v-leave-active {
+  transition: all 1s ease;
+  transition-delay: .5s;
+}
 
+.v-enter-from,
+.v-leave-to {
+  opacity: 0;
+}
 </style>
