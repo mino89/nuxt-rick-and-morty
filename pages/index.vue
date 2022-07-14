@@ -2,14 +2,18 @@
   <div>
     {{ store.infoList }}
     {{ store.charactersList.length }}
-    <modal v-show="store.singleCharacter" :data="store.singleCharacter"  @close-modal="clearSingleCharacter" />
+    <modal :data="store.singleCharacter" @close-modal="clearSingleCharacter" />
     <div class="grid">
       <div
         class="column"
         v-for="character in store.charactersList"
         :key="character.id"
       >
-        <card :character="character" @open-current="singleCharacter"/>
+        <card
+          :character="character"
+          @open-current="singleCharacter"
+          :selected="store.singleCharacter?.id === character.id ? true : false"
+        />
       </div>
     </div>
     <button @click="nextCharacter(store.info.next)">load more</button>
@@ -40,11 +44,11 @@ export default {
       if (next) await this.store.nextCharacter(next);
     },
     async singleCharacter(next) {
+      if (this.store.singleCharacter) await this.clearSingleCharacter();
       if (next) await this.store.fetchSingleCharacter(next);
-      console.log(this.store.singleCharacter)
     },
     async clearSingleCharacter() {
-      this.store.clearSingleCharacter()
+      await this.store.clearSingleCharacter();
     },
   },
 };
